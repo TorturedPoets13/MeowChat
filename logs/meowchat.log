@@ -1,0 +1,7 @@
+【meowchat】INFO 2025-06-21 20:37:17 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/api timer=0.00ms status_code=200
+【meowchat】INFO 2025-06-21 21:36:27 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/docs timer=1.00ms status_code=200
+【meowchat】INFO 2025-06-21 21:38:17 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/docs timer=0.00ms status_code=200
+【meowchat】INFO 2025-06-21 21:39:31 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/api timer=0.00ms status_code=200
+【meowchat】INFO 2025-06-21 21:51:46 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/exception timer=5.20ms status_code=200
+【meowchat】ERROR 2025-06-21 21:51:55 F:\pyProj\MeowChat\api\application\utils\exceptions.py:20 发生异常：name 'username' is not defined
+【meowchat】INFO 2025-06-21 21:51:55 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/exception timer=2.36ms status_code=200

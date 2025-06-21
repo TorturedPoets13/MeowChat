@@ -3,17 +3,22 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "首页"		// 页面标题
 			}
 		},
 		{
 			"path" : "pages/login/login",
 			"style" : 
 			{
-				"navigationBarTitleText" : ""
+				"navigationBarTitleText" : "登录"
 			}
 		}
 	],
+	    "window": {
+	        "navigationBarBackgroundColor": "#ff00ff",
+	        "navigationBarTextStyle": "black",
+	        "navigationBarTitleText": "Chat"
+	    },		// 聊天窗口
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

@@ -18,6 +18,11 @@
         </view>
         <button class="login-btn">登录</button>
       </view>
+	  
+    <view class="txt reg-btn">
+      <navigator url="/pages/register/register" hover-class="navigator-hover">还没有账号？点击注册 </navigator>
+    </view>
+	  
       <view class="tipbox">
         <view class="txt"> —— 其他账号登录 —— </view>
         <view class="otherUser">

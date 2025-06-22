@@ -37,6 +37,7 @@ const user_info = reactive({
 
 const userRegister = (e)=>{
     // 用户注册请求
+	console.log(e);
     uni.login({
         provider: 'weixin',
         success(response) {

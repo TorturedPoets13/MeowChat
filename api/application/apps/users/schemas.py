@@ -3,8 +3,11 @@ from api.application import settings
 from api.application.utils import tools
 
 
-class UserRegister(BaseModel):
-    """注册接口的请求数据结构"""
+# pydantic 模型的作用本质上就等同于（DRF）中的序列化器。
+
+
+class UserRegisterRequest(BaseModel):
+    """注册接口的请求数据结构->字段名跟前端发送请求的数据包中字段保持一致"""
     mobile: str = fields.Field(pattern='^1[3-9]\d{9}', description='手机号')
     password: str = fields.Field(min_length=6, max_length=16, description='密码')
     sms_code: str = fields.Field(max_length=settings.SMS['length'], description='短信验证码')

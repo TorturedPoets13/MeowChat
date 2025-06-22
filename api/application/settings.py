@@ -38,10 +38,20 @@ TORTOISE_ORM = {
     'timezone': os.environ.get('APP_TIMEZONE', 'Asia/Shanghai')
 }
 
+
 # 短信验证码相关配置
+"""
+ os.environ.get() 的返回值永远是字符串（即使默认值是整数）
+ 返回的也是 字符串 '4'，不是整数 4。
+
+所以最终 settings.SMS['length'] 是 '4'（str），就会导致 Pydantic 报：
+
+TypeError: 'str' object cannot be interpreted as an integer
+"""
 SMS = {
-    'length': os.environ.get('SMS_CODE_LENGTH', 4)
+    'length': int(os.environ.get('SMS_CODE_LENGTH', 4))
 }
+
 
 # 微信openid相关配置
 WECHAT = {

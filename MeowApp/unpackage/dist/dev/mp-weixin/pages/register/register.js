@@ -16,10 +16,11 @@ const _sfc_main = {
       // 短信验证码
     });
     const userRegister = (e) => {
+      common_vendor.index.__f__("log", "at pages/register/register.vue:40", e);
       common_vendor.index.login({
         provider: "weixin",
         success(response) {
-          common_vendor.index.__f__("log", "at pages/register/register.vue:43", response.code);
+          common_vendor.index.__f__("log", "at pages/register/register.vue:44", response.code);
           common_vendor.index.request({
             method: "POST",
             url: "http://127.0.0.1:8000/users/register",

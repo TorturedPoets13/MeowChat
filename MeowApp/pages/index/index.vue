@@ -62,11 +62,11 @@ const pageScrollToBottom = ()=>{
 pageScrollToBottom();
 
 const sendMessage = ()=>{
-  // // 跳转登陆页面
-  // uni.navigateTo({
-  //     url: '/pages/login/login',
-  // })
-  // return;
+  // 跳转登陆页面
+  uni.navigateTo({
+      url: '/pages/login/login',
+  })
+  return;
   if (userInput.value.trim() === '') return;
   const userMessage = {
     type: 'sender',

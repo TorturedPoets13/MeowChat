@@ -42,3 +42,9 @@ TORTOISE_ORM = {
 SMS = {
     'length': os.environ.get('SMS_CODE_LENGTH', 4)
 }
+
+# 微信openid相关配置
+WECHAT = {
+    'app_id': os.environ.get('WECHAT_APP_ID', ''),
+    'app_secret': os.environ.get('WECHAT_APP_SECRET', ''),
+}

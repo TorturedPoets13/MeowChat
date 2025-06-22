@@ -37,3 +37,8 @@ TORTOISE_ORM = {
     'use_tz': False,
     'timezone': os.environ.get('APP_TIMEZONE', 'Asia/Shanghai')
 }
+
+# 短信验证码相关配置
+SMS = {
+    'length': os.environ.get('SMS_CODE_LENGTH', 4)
+}

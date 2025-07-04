@@ -54,6 +54,15 @@ SMS = {
     'expire': int(os.environ.get('SMS_CODE_EXPIRE', 60))        # 短信验证码保存在redis中的有效期
 }
 
+ALIYUN = {
+    'key': os.environ.get('ALIYUN_KEY_ID'),
+    'secret': os.environ.get('ALIYUN_KEY_SECRET'),
+    'sms': {
+        'sign_name': os.environ.get('ALIYUN_VERIFY_SMS_SIGN_NAME', '阿里云短信测试'),
+        'template_code': os.environ.get('ALIYUN_VERIFY_TEMPLATE_CODE', 'SMS_154950909'),
+    }
+}
+
 
 # 微信openid相关配置
 WECHAT = {

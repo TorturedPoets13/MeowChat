@@ -10,3 +10,9 @@
 【meowchat】INFO 2025-06-22 23:01:23 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/favicon.ico timer=1.00ms status_code=404
 【meowchat】INFO 2025-06-22 23:23:07 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/users/register timer=612.38ms status_code=200
 【meowchat】INFO 2025-06-22 23:33:41 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/users/register timer=743.55ms status_code=200
+【meowchat】INFO 2025-07-04 19:29:27 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/ timer=1.00ms status_code=404
+【meowchat】INFO 2025-07-04 19:29:27 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/favicon.ico timer=1.00ms status_code=404
+【meowchat】INFO 2025-07-04 19:29:45 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/api timer=0.00ms status_code=200
+【meowchat】INFO 2025-07-04 19:29:51 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms timer=1.01ms status_code=404
+【meowchat】INFO 2025-07-04 19:29:58 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/123456789 timer=3.01ms status_code=200
+【meowchat】INFO 2025-07-04 19:56:56 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/123456789 timer=111.32ms status_code=200

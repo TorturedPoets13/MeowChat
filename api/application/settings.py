@@ -50,7 +50,8 @@ TORTOISE_ORM = {
 TypeError: 'str' object cannot be interpreted as an integer
 """
 SMS = {
-    'length': int(os.environ.get('SMS_CODE_LENGTH', 4))
+    'length': int(os.environ.get('SMS_CODE_LENGTH', 4)),        # 短信验证码长度
+    'expire': int(os.environ.get('SMS_CODE_EXPIRE', 60))        # 短信验证码保存在redis中的有效期
 }
 
 

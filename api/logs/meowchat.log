@@ -1,0 +1,4 @@
+【meowchat】INFO 2025-07-04 19:24:55 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/1234567890 timer=11.81ms status_code=200
+【meowchat】INFO 2025-07-04 19:24:55 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/favicon.ico timer=1.00ms status_code=404
+【meowchat】INFO 2025-07-04 19:27:57 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/1234567890 timer=1.99ms status_code=200
+【meowchat】INFO 2025-07-04 19:27:59 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/1234567890 timer=1.68ms status_code=200

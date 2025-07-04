@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-
+import string, secrets
 
 class Hashing(object):
     """密码工具类"""
@@ -24,7 +24,22 @@ class Hashing(object):
         """
         return self.crypt.verify(raw_password, hashed_password)
 
-# 测试工具代码
+
+def genint(length):
+    """
+    生成指定长度的纯数字字符串
+    :param length: 字符长度
+    :return:
+    """
+    characters = string.digits  # string.digits是 Python 标准库 string 的一个常量，值为 '0123456789'，表示所有的十进制数字字符
+    ret = "".join(secrets.choice(characters) for _ in range(length))    # secrets 比 random.choices 更安全 secrets 模块是一个专为生成加密强随机数
+    return ret
+
+# 测试生成随机数字工具代码
+# if __name__ == '__main__':
+#     print(genint(6))
+
+# 测试密码加密工具代码
 # if __name__ == '__main__':
 #     hashing = Hashing()
 #     # 对原始密码进行哈希加密

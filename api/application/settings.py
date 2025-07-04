@@ -24,6 +24,7 @@ TORTOISE_ORM = {
             # 模型所在目录文件的导包路径[字符串格式],'aerich.models'使用aerich模块进行数据迁移
             '''
             pip install aerich
+            数据迁移
             cd api/
             aerich init -t application.settings.TORTOISE_ORM
             aerich init-db
@@ -57,4 +58,12 @@ SMS = {
 WECHAT = {
     'app_id': os.environ.get('WECHAT_APP_ID', ''),
     'app_secret': os.environ.get('WECHAT_APP_SECRET', ''),
+}
+
+REDIS = {
+    'host': os.environ.get('REDIS_HOST', '127.0.0.1'),   # 数据库地址
+    'port': os.environ.get('REDIS_PORT', 6379),          # 数据库端口号
+    'db': os.environ.get('REDIS_DB', 0),                 # 数据库名
+    'username': os.environ.get('REDIS_USERNAME', ''),    # 用户名
+    'password': os.environ.get('REDIS_PASSWORD', ''),    # 密码
 }

@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from tortoise.contrib.fastapi import register_tortoise
-from api.application.utils import middleware, exceptions
+from api.application.utils import middleware, exceptions, redis_tools
 from api.application.apps.common.views import app as common_app
 from api.application.apps.users.views import app as users_app
 
@@ -22,7 +22,7 @@ def create_app():
         version=os.environ.get('APP_VERSION'),
         # 注册自定义全局异常处理
         exception_handlers={
-            # 或者用app.add_exception_handler()方法注册
+            # 或者用下面注释的app.add_exception_handler()方法注册
             exceptions.HTTPException: exceptions.global_http_exception_handler,
             exceptions.RequestValidationError: exceptions.global_request_exception_handler,
 
@@ -43,6 +43,11 @@ def create_app():
         # 数据迁移可用aerich代替
         generate_schemas=False,  # 是否自动生成表结构[自动根据配置项中apps.models的路径自动识别模型],每次都会创建表，存在则报错，一般不用
         add_exception_handlers=True,  # 是否启用自动异常处理
+    )
+    # redis连接对象注册到App应用对象中
+    redis_tools.register_redis(
+        app,
+        config=settings.REDIS,
     )
     # 注册各个应用分组下的路由信息，合并到App应用对象中
     app.include_router(common_app, prefix='')

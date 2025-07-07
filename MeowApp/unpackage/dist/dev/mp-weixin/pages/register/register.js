@@ -4,9 +4,17 @@ if (!Array) {
   const _component_uni_icons = common_vendor.resolveComponent("uni-icons");
   _component_uni_icons();
 }
+if (!Math) {
+  TopToast();
+}
+const TopToast = () => "../../components/TopToast.js";
 const _sfc_main = {
   __name: "register",
   setup(__props) {
+    const toastRef = common_vendor.ref();
+    const smsText = common_vendor.ref("验证码");
+    const buttonDisabled = common_vendor.ref(false);
+    const Sumtime = common_vendor.ref(0);
     const user_info = common_vendor.reactive({
       mobile: "",
       // 手机号
@@ -15,12 +23,42 @@ const _sfc_main = {
       sms_code: ""
       // 短信验证码
     });
+    const sendSMS = () => {
+      if (buttonDisabled.value)
+        return;
+      if (!user_info.mobile) {
+        toastRef.value.showToast("请输入手机号", "error");
+        return;
+      }
+      if (!/^1[3-9]\d+/.test(user_info.mobile)) {
+        toastRef.value.showToast("验证码发送失败，手机格式不正确，", "error");
+        return;
+      }
+      if (Sumtime.value > 0) {
+        toastRef.value.showTo("验证码发送失败，不能频繁点击发送！", "error");
+        return;
+      }
+      common_vendor.index.request({
+        method: "GET",
+        url: `http://127.0.0.1:8000/sms/${user_info.mobile}`
+      }).then((res) => {
+        if (res.data.code === 200) {
+          toastRef.value.showToast("短信发送成功", "success");
+        } else {
+          toastRef.value.showToast(res.data.err_msg || "发送失败", "error");
+        }
+      }).catch((err) => {
+        var _a, _b;
+        const msg = ((_b = (_a = err == null ? void 0 : err.res) == null ? void 0 : _a.data) == null ? void 0 : _b.err_msg) || "网络错误";
+        toastRef.value.showToast(msg, "error");
+      });
+    };
     const userRegister = (e) => {
-      common_vendor.index.__f__("log", "at pages/register/register.vue:40", e);
+      common_vendor.index.__f__("log", "at pages/register/register.vue:102", e);
       common_vendor.index.login({
         provider: "weixin",
         success(response) {
-          common_vendor.index.__f__("log", "at pages/register/register.vue:44", response.code);
+          common_vendor.index.__f__("log", "at pages/register/register.vue:106", response.code);
           common_vendor.index.request({
             method: "POST",
             url: "http://127.0.0.1:8000/users/register",
@@ -28,6 +66,7 @@ const _sfc_main = {
               code: response.code,
               ...user_info,
               ...e.detail.userInfo
+              // ...相当于python中** 用于打散字典 **kwargs
             }
           });
         }
@@ -56,7 +95,12 @@ const _sfc_main = {
         }),
         h: user_info.sms_code,
         i: common_vendor.o(($event) => user_info.sms_code = $event.detail.value),
-        j: common_vendor.o(userRegister)
+        j: common_vendor.t(smsText.value),
+        k: common_vendor.o(sendSMS),
+        l: common_vendor.o(userRegister),
+        m: common_vendor.sr(toastRef, "bac4a35d-3", {
+          "k": "toastRef"
+        })
       };
     };
   }

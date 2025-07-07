@@ -1,0 +1,1 @@
+<view wx:if="{{a}}" class="{{['data-v-f9b22de1', 'toast', c]}}">{{b}}</view>

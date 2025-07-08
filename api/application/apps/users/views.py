@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Request
 from api.application.apps.users import models, schemas
 from api.application.utils import wx_tools
 from api.application.utils.logs import get_logger
@@ -12,15 +12,21 @@ async def api():
     return {'title': '测试login'}
 
 
-@app.post('/register')
-async def register(user_info: schemas.UserRegisterRequest):
+@app.post('/register', response_model=schemas.UserRegisterResponse)
+async def register(request: Request, user_info: schemas.UserRegisterRequest):
     """处理用户注册请求"""
     # 1.验证用户账号是否重复注册【mobile】
     # 查询手机号存在则抛出异常，异步中涉及io操作就要await
     user_mobile = await models.User.filter(mobile=user_info.mobile).first()
     if user_mobile:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='当前手机号已注册！')
-    # todo: 判断验证码是否正确
+    # 判断验证码是否正确
+    redis = request.app.state.redis
+    redis_sms = await redis.get(f'sms_{user_info.mobile}')
+    if redis_sms is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='验证码已过期')
+    if redis_sms != user_info.sms_code:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail='验证码不正确')
 
     # 2.通过小程序提交的code授权码到微信官方获取当前微信用户的openid和session_key
     wx_user = wx_tools.get_wx_info(user_info.code)
@@ -49,6 +55,8 @@ async def register(user_info: schemas.UserRegisterRequest):
     这一步执行后，Tortoise ORM 会自动返回带有主键和字段数据的 User 实例对象，就像你从数据库查出的一样。
     所以可以user.访问这些字段
     """
+    # 注册后删除redis中保存的验证码，防止一码多用
+    await redis.delete(f'sms_{user_info.mobile}')
 
     # 4. 注册成功后返回的数据包，按照schemas/UserRegisterResponse的数据结构返回响应
     return {

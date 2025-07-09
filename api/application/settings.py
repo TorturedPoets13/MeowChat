@@ -77,3 +77,12 @@ REDIS = {
     'username': os.environ.get('REDIS_USERNAME', ''),    # 用户名
     'password': os.environ.get('REDIS_PASSWORD', ''),    # 密码
 }
+
+JWT = {
+    # 秘钥[盐值]
+    'secret_key': os.environ.get('APP_SECRET', 'U@r@zXFJyj0wlnxkvBXKrGRd!G&Oj&4y$4jnImTU-X$XH5K%@OhAiBHkjVC@4*cb'),
+    # 设定JWT令牌签名算法
+    'algorithm': "HS256",
+    # 设置令牌过期时间变量（单位：秒）
+    'expire_time': 30 * 60
+}

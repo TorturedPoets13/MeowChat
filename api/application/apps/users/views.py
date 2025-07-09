@@ -2,6 +2,7 @@ import os
 from fastapi import APIRouter, HTTPException, status, Request
 from api.application.apps.users import models, schemas
 from api.application.utils import wx_tools
+from api.application.utils.jwt_tools import JWTToken
 from api.application.utils.logs import get_logger
 
 app = APIRouter()
@@ -66,5 +67,7 @@ async def register(request: Request, user_info: schemas.UserRegisterRequest):
         'code': status.HTTP_200_OK,
         'err_msg': '用户注册成功',
         'status': 'Success',
-        'token': 'asdlasldsldlasdl',  # todo：暂时先随机写一个token，后面具体实现
+        'token': JWTToken.create_token({
+            'id': user.id
+        }),  # Jwt token生成
     }

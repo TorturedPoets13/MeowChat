@@ -38,7 +38,7 @@ const _sfc_main = {
         return;
       }
       if (Sumtime.value > 0) {
-        toastRef.value.showTo("验证码发送失败，不能频繁点击发送！", "error");
+        toastRef.value.showToast("验证码发送失败，不能频繁点击发送！", "error");
         return;
       }
       common_vendor.index.request({

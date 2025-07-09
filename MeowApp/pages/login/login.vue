@@ -5,15 +5,15 @@
       <view class="inputBox">
         <view class="ipt">
           <uni-icons type="contact" size="24" color="rgb(66,157,250)"></uni-icons>
-          <input type="text" value="" placeholder="请输入账号"/>
+          <input type="text" v-model="user_info.mobile" placeholder="请输入账号"/>
         </view>
         <view class="ipt">
           <uni-icons type="eye" size="24" color="rgb(66,157,250)"></uni-icons>
-          <input type="passsword" value="" placeholder="请输入密码"/>
+          <input type="passsword" v-model="user_info.password" placeholder="请输入密码"/>
         </view>
         <view class="ipt">
           <uni-icons type="checkmarkempty" size="24" color="rgb(66,157,250)"></uni-icons>
-          <input type="text" value="" placeholder="请输入验证码"/>
+          <input type="text" v-model="user_info.sms_code" placeholder="请输入验证码"/>
           <view class="yzm" @click="sendSMS">验证码</view>
         </view>
         <button class="login-btn" open-type="getUserInfo" @getuserinfo="userLogin">登录</button>
@@ -45,6 +45,10 @@
 import { ref, reactive } from 'vue';
 import { useStore } from '../../stores';
 import { settings } from '../../settings';
+import TopToast from '../../components/TopToast.vue';
+
+// 引用弹窗组件
+const toastRef = ref()
 
 // 创建Pinia全局存储对象
 const store = useStore()
@@ -96,7 +100,9 @@ const sendSMS = ()=>{
         // 根据返回的code判断是否成功发送短信
         if(response.data.code != 200){
             toastRef.value.showToast(response.data.err_msg || '发送失败', 'error');
-        }
+        }else{
+			toastRef.value.showToast('发送成功', 'success');
+		}
     }).catch(error=>{
         // 弹窗提示错误结果
         toastRef.value.showToast(error, 'error');

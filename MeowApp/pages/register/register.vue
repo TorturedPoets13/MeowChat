@@ -65,7 +65,7 @@ const sendSMS = () => {
   }
   // 判断是否在倒计时内重复点击发送短信？
   if(Sumtime.value>0){
-	  toastRef.value.showTo('验证码发送失败，不能频繁点击发送！', 'error');
+	  toastRef.value.showToast('验证码发送失败，不能频繁点击发送！', 'error');
 	  return
   }
 

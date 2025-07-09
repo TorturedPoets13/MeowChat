@@ -1,6 +1,7 @@
 from passlib.context import CryptContext
 import string, secrets
 
+
 class Hashing(object):
     """密码工具类"""
 
@@ -32,8 +33,28 @@ def genint(length):
     :return:
     """
     characters = string.digits  # string.digits是 Python 标准库 string 的一个常量，值为 '0123456789'，表示所有的十进制数字字符
-    ret = "".join(secrets.choice(characters) for _ in range(length))    # secrets 比 random.choices 更安全 secrets 模块是一个专为生成加密强随机数
+    ret = "".join(
+        secrets.choice(characters) for _ in range(length))  # secrets 比 random.choices 更安全 secrets 模块是一个专为生成加密强随机数
     return ret
+
+
+def genkey(length: int = 32) -> str:
+    """
+    jwt秘钥随机生成函数
+    生成指定长度的随机字符串
+    :param length: 生成的字符串的长度
+    :return: 字符串
+    """
+    characters = string.ascii_letters  # 26个小写字母和26个大写字母
+    characters = characters + string.digits  # 10个数字
+    characters = characters + '!@#$%^&*./=-'  # 特殊符号
+    return "".join(secrets.choice(characters) for i in range(length))
+
+
+# if __name__ == '__main__':
+#     """生成指定长度的随机字符串"""
+#     print(genkey())
+#     print(genkey(64))
 
 # 测试生成随机数字工具代码
 # if __name__ == '__main__':

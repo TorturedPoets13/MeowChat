@@ -14,9 +14,9 @@
         <view class="ipt">
           <uni-icons type="checkmarkempty" size="24" color="rgb(66,157,250)"></uni-icons>
           <input type="text" value="" placeholder="请输入验证码"/>
-          <view class="yzm">验证码</view>
+          <view class="yzm" @click="sendSMS">验证码</view>
         </view>
-        <button class="login-btn">登录</button>
+        <button class="login-btn" open-type="getUserInfo" @getuserinfo="userLogin">登录</button>
       </view>
 	  
     <view class="txt reg-btn">
@@ -36,9 +36,72 @@
       </view>
     </view>
   </view>
+  <!-- 顶部提示弹窗 -->
+  <TopToast ref="toastRef" />
 </template>
 
 <script setup>
+	
+import { ref, reactive } from 'vue';
+import { useStore } from '../../stores';
+import { settings } from '../../settings';
+
+// 创建Pinia全局存储对象
+const store = useStore()
+
+
+// 用户登录信息
+const user_info = reactive({
+    mobile: "",   // 手机号
+    password: "", // 密码 
+    sms_code: "",     // 短信验证码
+})
+
+const userLogin = (e)=>{
+    // 用户登录请求
+    uni.login({
+        provider: 'weixin',
+        success(response) {
+            // 发送用户的登录数据到服务端
+            uni.request({
+                method:'POST',
+                url: `${settings.host}/users/login`,
+                data:{
+                    code: response.code,
+                    ...user_info
+                }
+            }).then(response=>{
+                if(response.data.code != 200){
+                    toastRef.value.showToast(response.data.err_msg || '登录失败', 'error');;
+                }
+                if(response.data.code == 200){
+                    // 登录成功，保存token
+                    store.set_token(response.data.token);
+                    // 跳转到聊天首页
+                    uni.navigateTo({
+                        url: '/pages/index/index'
+                    })
+                }
+            })
+        }
+    })
+}
+
+const sendSMS = ()=>{
+    // 发送短信验证码
+    uni.request({
+        method: "GET",
+        url: `${settings.host}/sms/${user_info.mobile}`,
+    }).then(response=>{
+        // 根据返回的code判断是否成功发送短信
+        if(response.data.code != 200){
+            toastRef.value.showToast(response.data.err_msg || '发送失败', 'error');
+        }
+    }).catch(error=>{
+        // 弹窗提示错误结果
+        toastRef.value.showToast(error, 'error');
+    })
+}
 
 </script>
 

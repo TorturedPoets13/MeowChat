@@ -31,6 +31,10 @@
 <script setup>
 import { reactive,ref } from 'vue';
 import TopToast from '../../components/TopToast.vue';
+import { useStore } from '../../stores';
+import { settings } from '../../settings';
+
+const store = useStore()	// pinia持久化存储token
 
 // 引用弹窗组件
 const toastRef = ref()
@@ -67,7 +71,7 @@ const sendSMS = () => {
 
   uni.request({
     method: 'GET',
-    url: `http://127.0.0.1:8000/sms/${user_info.mobile}`,
+    url: `${settings.host}/sms/${user_info.mobile}`,
   }).then((res) => {
     if (res.data.code === 200) {
       toastRef.value.showToast('短信发送成功', 'success')
@@ -76,7 +80,7 @@ const sendSMS = () => {
       toastRef.value.showToast(res.data.err_msg || '发送失败', 'error')
     }
   }).catch((err) => {
-    const msg = err?.res?.data?.err_msg || '网络错误'
+    const msg = err?.res?.data?.err_msg || '请求失败或网络错误'
     toastRef.value.showToast(msg, 'error')
   })
 }
@@ -107,13 +111,25 @@ const userRegister = (e)=>{
             // 发送用户的注册数据到Fastapi服务端
             uni.request({
                 method:'POST',
-                url: 'http://127.0.0.1:8000/users/register',
+				url: `${settings.host}/users/register`,
                 data:{
                     code: response.code,
                     ...user_info,
                     ...e.detail.userInfo,	// ...相当于python中** 用于打散字典 **kwargs
                 }
-            })
+            }).then(response=>{
+				if(response.data.code != 200){
+					toastRef.value.showToast(response.data.err_msg|| '登录失败', 'error')
+				}else{
+					toastRef.value.showToast(response.data.err_msg|| '登录成功', 'success')
+					// 注册成功，保存认证token
+					store.set_token(response.data.token)
+					// 跳转到首页
+					uni.navigateTo({
+						url: '/pages/index/index'
+					})
+				}
+			})
         }
     })
 }

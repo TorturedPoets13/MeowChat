@@ -1,5 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const stores_index = require("../../stores/index.js");
+const settings_index = require("../../settings/index.js");
 if (!Array) {
   const _component_uni_icons = common_vendor.resolveComponent("uni-icons");
   _component_uni_icons();
@@ -11,6 +13,7 @@ const TopToast = () => "../../components/TopToast.js";
 const _sfc_main = {
   __name: "register",
   setup(__props) {
+    const store = stores_index.useStore();
     const toastRef = common_vendor.ref();
     const smsText = common_vendor.ref("验证码");
     const buttonDisabled = common_vendor.ref(false);
@@ -40,7 +43,7 @@ const _sfc_main = {
       }
       common_vendor.index.request({
         method: "GET",
-        url: `http://127.0.0.1:8000/sms/${user_info.mobile}`
+        url: `${settings_index.settings.host}/sms/${user_info.mobile}`
       }).then((res) => {
         if (res.data.code === 200) {
           toastRef.value.showToast("短信发送成功", "success");
@@ -49,24 +52,34 @@ const _sfc_main = {
         }
       }).catch((err) => {
         var _a, _b;
-        const msg = ((_b = (_a = err == null ? void 0 : err.res) == null ? void 0 : _a.data) == null ? void 0 : _b.err_msg) || "网络错误";
+        const msg = ((_b = (_a = err == null ? void 0 : err.res) == null ? void 0 : _a.data) == null ? void 0 : _b.err_msg) || "请求失败或网络错误";
         toastRef.value.showToast(msg, "error");
       });
     };
     const userRegister = (e) => {
-      common_vendor.index.__f__("log", "at pages/register/register.vue:102", e);
+      common_vendor.index.__f__("log", "at pages/register/register.vue:106", e);
       common_vendor.index.login({
         provider: "weixin",
         success(response) {
-          common_vendor.index.__f__("log", "at pages/register/register.vue:106", response.code);
+          common_vendor.index.__f__("log", "at pages/register/register.vue:110", response.code);
           common_vendor.index.request({
             method: "POST",
-            url: "http://127.0.0.1:8000/users/register",
+            url: `${settings_index.settings.host}/users/register`,
             data: {
               code: response.code,
               ...user_info,
               ...e.detail.userInfo
               // ...相当于python中** 用于打散字典 **kwargs
+            }
+          }).then((response2) => {
+            if (response2.data.code != 200) {
+              toastRef.value.showToast(response2.data.err_msg || "登录失败", "error");
+            } else {
+              toastRef.value.showToast(response2.data.err_msg || "登录成功", "success");
+              store.set_token(response2.data.token);
+              common_vendor.index.navigateTo({
+                url: "/pages/index/index"
+              });
             }
           });
         }

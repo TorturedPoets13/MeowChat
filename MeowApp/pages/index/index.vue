@@ -34,6 +34,10 @@
 
 <script setup>
 import {ref} from "vue";
+import { useStore } from "../../stores";
+
+const store = useStore();
+
 const userInput = ref("");
 const messages = ref([{
     type: 'sender',
@@ -62,11 +66,13 @@ const pageScrollToBottom = ()=>{
 pageScrollToBottom();
 
 const sendMessage = ()=>{
-  // 跳转登陆页面
-  uni.navigateTo({
-      url: '/pages/login/login',
-  })
-  return;
+  // 如果没有认证token则跳转登陆页面
+  if(!store.get_payload()){
+	  uni.navigateTo({
+	  	url: '/pages/login/login',
+	  });
+  }
+
   if (userInput.value.trim() === '') return;
   const userMessage = {
     type: 'sender',

@@ -1,8 +1,10 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const stores_index = require("../../stores/index.js");
 const _sfc_main = {
   __name: "index",
   setup(__props) {
+    const store = stores_index.useStore();
     const userInput = common_vendor.ref("");
     const messages = common_vendor.ref([
       {
@@ -29,10 +31,22 @@ const _sfc_main = {
     };
     pageScrollToBottom();
     const sendMessage = () => {
-      common_vendor.index.navigateTo({
-        url: "/pages/login/login"
-      });
-      return;
+      if (!store.get_payload()) {
+        common_vendor.index.navigateTo({
+          url: "/pages/login/login"
+        });
+      }
+      if (userInput.value.trim() === "")
+        return;
+      const userMessage = {
+        type: "sender",
+        text: userInput.value,
+        time: "2024-01-26 13:59:12",
+        photoUrl: "https://pic2.zhimg.com/80/v2-ab37ad93a61fc94135f1c67ea2412c55_720w.webp"
+      };
+      messages.value.push(userMessage);
+      userInput.value = "";
+      pageScrollToBottom();
     };
     return (_ctx, _cache) => {
       return {

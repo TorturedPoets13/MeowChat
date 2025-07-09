@@ -86,3 +86,10 @@ JWT = {
     # 设置令牌过期时间变量（单位：秒）
     'expire_time': 30 * 60
 }
+
+AI_ROBOT = {
+    # 是否开启api次数限流，0表示关闭，1表示开启
+    'limit': int(os.environ.get('AI_API_LIMIT', 1)),
+    # 允许用户每天免费使用的次数
+    'count': int(os.environ.get('AI_API_COUNT', 5)),
+}

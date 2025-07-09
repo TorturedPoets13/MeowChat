@@ -1,16 +1,68 @@
 import os
 from fastapi import APIRouter, HTTPException, status, Request
 from api.application.apps.users import models, schemas
-from api.application.utils import wx_tools
+from api.application.utils import wx_tools, tools
 from api.application.utils.jwt_tools import JWTToken
+from tortoise.expressions import Q
+from datetime import datetime, timedelta
+from api.application import settings
 from api.application.utils.logs import get_logger
 
 app = APIRouter()
 
 
-@app.get('/login')
-async def api():
-    return {'title': '测试login'}
+@app.post('/login', response_model=schemas.UserRegisterResponse)
+async def login(request: Request, user_info: schemas.UserLoginRequest):
+    """用户登录操作"""
+    # 0.判断验证码是否正确
+    redis = request.app.state.redis
+    sms_code = await redis.get(f"sms_{user_info.mobile}")
+
+    if not sms_code:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='验证码不存在或填写错误')
+    if sms_code != user_info.sms_code:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='验证码不存在或填写错误')
+    # 判断当前用户是否存在
+    # 1.基于code请求微信服务器获取用户的openid以及将来调用用户信息的session_key
+    result = wx_tools.get_wx_info(user_info.code)
+    # 2.根据手机号或微信openid判断是否重复注册
+    # select * from User where mobile=xxx or openid=xxx
+    user = await models.User.filter(Q(mobile=user_info.mobile) | Q(openid=result['openid'])).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='当前账号错误')
+    # 3.判断密码是否正确
+    hashing = tools.Hashing()
+    ret = hashing.verify(user_info.password, user.password)
+    if not ret:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='当前账号或密码错误！')
+    # 生成token
+    token = JWTToken.create_token({
+        'id': user.id,
+        # 'username': user.username
+    })
+    # 记录用户登录历史
+    await models.UserLoginHistory.create(user=user)
+    # 将token保存到redis中
+    await redis.setex(f'token_{user.id}', settings.JWT['expire_time'], token)
+    # 如果打开限流功能，则初始化用户每天免费使用AI助理的次数到redis中，次日过期
+    if settings.AI_ROBOT['limit'] == 1:
+        current_time = datetime.now()
+        tomorrow_time = current_time + timedelta(days=1)
+        tomorrow_zero = datetime.strptime(f'{tomorrow_time.year}-{tomorrow_time.month}-{tomorrow_time.day}', '%Y-%m-%d')
+        delta = tomorrow_zero - current_time
+        redis.setex(f'api_{user.id}', delta.seconds, settings.AI_ROBOT['count'])
+
+    # 删除短信验证码，防止一码多用
+    await redis.delete(f'sms_{user_info.mobile}')
+    return {
+        'id': user.id,
+        'nickname': user.nickname,
+        'avatar': user.avatar,
+        'code': 200,
+        'err_msg': '用户登录成功',
+        'status': 'SUCCESS',
+        'token': token,
+    }
 
 
 @app.post('/register', response_model=schemas.UserRegisterResponse)
@@ -27,7 +79,7 @@ async def register(request: Request, user_info: schemas.UserRegisterRequest):
     if redis_sms is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='验证码已过期')
     if redis_sms != user_info.sms_code:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail='验证码不正确')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='验证码不正确')
 
     # 2.通过小程序提交的code授权码到微信官方获取当前微信用户的openid和session_key
     wx_user = wx_tools.get_wx_info(user_info.code)

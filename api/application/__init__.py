@@ -5,6 +5,7 @@ from tortoise.contrib.fastapi import register_tortoise
 from api.application.utils import middleware, exceptions, redis_tools
 from api.application.apps.common.views import app as common_app
 from api.application.apps.users.views import app as users_app
+from api.application.apps.chat.views import app as chat_app
 
 from api.application import settings
 
@@ -52,6 +53,7 @@ def create_app():
     # 注册各个应用分组下的路由信息，合并到App应用对象中
     app.include_router(common_app, prefix='')
     app.include_router(users_app, prefix='/users')  # prefix url路径添加前缀
+    app.include_router(chat_app, prefix='/chat')
 
     # 注册中间件函数
     # 该写法其实是 @app.middleware('http') 装饰器的底层用法。

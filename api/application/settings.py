@@ -20,7 +20,7 @@ TORTOISE_ORM = {
     },
     'apps': {  # 默认所在的应用目录
         'models': {  # 数据模型的分组名
-            'models': ['api.application.apps.users.models', 'aerich.models'],
+            'models': ['api.application.apps.users.models', 'api.application.apps.chat.models',  'aerich.models'],
             # 模型所在目录文件的导包路径[字符串格式],'aerich.models'使用aerich模块进行数据迁移
             '''
             pip install aerich

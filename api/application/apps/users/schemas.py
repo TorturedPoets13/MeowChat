@@ -28,12 +28,14 @@ class UserRegisterRequest(BaseModel):
 
         return self
 
+
 class UserLoginRequest(BaseModel):
     """登录接口的请求数据结构"""
     mobile: str = fields.Field(pattern='^1[3-9]\d{9}', description='手机号')
     password: str = fields.Field(min_length=6, max_length=16, description='密码')
     sms_code: str = fields.Field(max_length=settings.SMS['length'], description="短信验证码")
     code: str = fields.Field(description='授权码[10分钟内有效]')
+
 
 # 注册接口需要返回以下7个响应数据
 class BaseResponse(BaseModel):

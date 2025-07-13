@@ -1,0 +1,11 @@
+【meowchat】INFO 2025-07-08 22:10:55 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/13377885566 timer=53.11ms status_code=200
+【meowchat】INFO 2025-07-08 22:12:45 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/users/register timer=1065.93ms status_code=200
+【meowchat】INFO 2025-07-09 18:48:51 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/13377885566 timer=170.16ms status_code=200
+【meowchat】INFO 2025-07-09 18:49:13 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/users/register timer=3539.45ms status_code=200
+【meowchat】INFO 2025-07-09 20:42:03 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/13377885566 timer=105.54ms status_code=200
+【meowchat】INFO 2025-07-09 20:45:23 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/users/register timer=1359.51ms status_code=200
+【meowchat】INFO 2025-07-09 22:10:17 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/13377885566 timer=134.76ms status_code=200
+【meowchat】ERROR 2025-07-09 22:14:59 F:\pyProj\MeowChat\api\application\utils\exceptions.py:20 发生异常：验证码不存在或填写错误
+【meowchat】INFO 2025-07-09 22:14:59 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/users/login timer=69.33ms status_code=200
+【meowchat】INFO 2025-07-09 22:16:08 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/sms/13377885566 timer=17.12ms status_code=200
+【meowchat】INFO 2025-07-09 22:17:38 F:\pyProj\MeowChat\api\application\utils\middleware.py:20 path=/users/login timer=1050.95ms status_code=200

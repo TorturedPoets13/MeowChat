@@ -35,8 +35,12 @@
 <script setup>
 import {ref} from "vue";
 import { useStore } from "../../stores";
+import { Websocket } from "../../websocket";
+import { settings } from "../../settings";
 
 const store = useStore();
+const socket = new Websocket(`${settings.ws_host}/chat/index`);
+
 
 const userInput = ref("");
 const messages = ref([{
@@ -67,13 +71,20 @@ pageScrollToBottom();
 
 const sendMessage = ()=>{
   // 如果没有认证token则跳转登陆页面
-  if(!store.get_payload()){
-	  uni.navigateTo({
-	  	url: '/pages/login/login',
-	  });
-  }
+  // if(!store.get_payload()){
+	 //  uni.navigateTo({
+	 //  	url: '/pages/login/login',
+	 //  });
+  // }
 
   if (userInput.value.trim() === '') return;
+  // websocket通信
+  socket.send({
+	  action: 'chat',
+	  message: userInput.value,
+	  // token: store.get_token()
+  });
+  
   const userMessage = {
     type: 'sender',
     text: userInput.value,
@@ -84,6 +95,20 @@ const sendMessage = ()=>{
   userInput.value = '';
   pageScrollToBottom();
 }
+
+// 监听来自websocket服务端返回的数据结果
+socket.socketTask.onMessage((res)=>{
+    let data = JSON.parse(res.data);
+    const userMessage = {
+      type: 'ai',
+      text: data.message,
+      time: '2024-01-26 13:59:12',
+      photoUrl: 'https://www.lulinux.com/d/file/bigpic/az/234906/xldp0zb1vlw.png',
+    };
+    messages.value.push(userMessage);
+    userInput.value = '';
+    pageScrollToBottom();
+})
 
 </script>
 

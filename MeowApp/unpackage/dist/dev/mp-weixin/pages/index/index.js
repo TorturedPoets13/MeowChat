@@ -1,10 +1,13 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const stores_index = require("../../stores/index.js");
+const websocket_index = require("../../websocket/index.js");
+const settings_index = require("../../settings/index.js");
 const _sfc_main = {
   __name: "index",
   setup(__props) {
-    const store = stores_index.useStore();
+    stores_index.useStore();
+    const socket = new websocket_index.Websocket(`${settings_index.settings.ws_host}/chat/index`);
     const userInput = common_vendor.ref("");
     const messages = common_vendor.ref([
       {
@@ -31,13 +34,13 @@ const _sfc_main = {
     };
     pageScrollToBottom();
     const sendMessage = () => {
-      if (!store.get_payload()) {
-        common_vendor.index.navigateTo({
-          url: "/pages/login/login"
-        });
-      }
       if (userInput.value.trim() === "")
         return;
+      socket.send({
+        action: "chat",
+        message: userInput.value
+        // token: store.get_token()
+      });
       const userMessage = {
         type: "sender",
         text: userInput.value,
@@ -48,6 +51,18 @@ const _sfc_main = {
       userInput.value = "";
       pageScrollToBottom();
     };
+    socket.socketTask.onMessage((res) => {
+      let data = JSON.parse(res.data);
+      const userMessage = {
+        type: "ai",
+        text: data.message,
+        time: "2024-01-26 13:59:12",
+        photoUrl: "https://www.lulinux.com/d/file/bigpic/az/234906/xldp0zb1vlw.png"
+      };
+      messages.value.push(userMessage);
+      userInput.value = "";
+      pageScrollToBottom();
+    });
     return (_ctx, _cache) => {
       return {
         a: common_vendor.f(messages.value, (message, index, i0) => {

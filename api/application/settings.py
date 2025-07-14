@@ -91,5 +91,12 @@ AI_ROBOT = {
     # 是否开启api次数限流，0表示关闭，1表示开启
     'limit': int(os.environ.get('AI_API_LIMIT', 1)),
     # 允许用户每天免费使用的次数
-    'count': int(os.environ.get('AI_API_COUNT', 5)),
+    'count': int(os.environ.get('AI_API_COUNT', 10)),
+    'openai_api_key': os.environ.get('OPENAI_API_KEY', ''),
+    'openai_model': os.environ.get('OPENAI_MODEL', 'gpt-4o-mini'),
+    'openai_baseurl': os.environ.get('OPENAI_BASEURL', None),   # api接口地址,当账号api调用次数达上线时可以使用此api地址
+    'proxies': {
+        "http": os.environ.get('HTTP_PROXY'),
+        "https": os.environ.get('HTTPS_PROXY'),
+    }
 }
